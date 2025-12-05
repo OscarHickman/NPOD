@@ -27,13 +27,44 @@ namespace NasaPicOfDay
 		static readonly Mutex Mutex = new Mutex(true, "c6ed4943-2c8e-4382-af10-6455ec315896");
 
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			//Checking to see if logging is enabled.
 			GlobalVariables.LoggingEnabled = Settings.Default.LoggingEnabled;
 			GlobalVariables.GetApplicationVersion();
 
 			if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Application starting.");
+
+			// Check for silent/scheduled task mode
+			bool silentMode = args.Length > 0 && (args[0] == "-silent" || args[0] == "-s" || args[0] == "/silent" || args[0] == "/s");
+
+			if (silentMode)
+			{
+				// Run once and exit - for scheduled tasks
+				if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Running in silent mode.");
+				
+				if (!NetworkHelper.InternetAccessIsAvailable())
+				{
+					if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("No internet connection. Application exiting.");
+					return;
+				}
+
+				try
+				{
+					var changer = new BackgroundChanger();
+					var image = changer.GetImage();
+					if (image != null)
+					{
+						changer.SetDesktopBackground(image.DownloadedPath);
+						if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Wallpaper updated successfully in silent mode.");
+					}
+				}
+				catch (Exception ex)
+				{
+					ExceptionManager.WriteException(ex);
+				}
+				return;
+			}
 
 			//Checking to see if the application is running
 			if (Mutex.WaitOne(TimeSpan.Zero, true))
