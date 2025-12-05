@@ -14,12 +14,12 @@ namespace NasaPicOfDay
 		#region Private Properties
 		private bool _internetAvailable = true;
 		private NotifyIcon _notifyIcon1;
-		private ContextMenu _contextMenu1;
-		private MenuItem _exitMenuItem;
-		private MenuItem _detailsMenuItem;
-		private MenuItem _updateMenuItem;
-		private MenuItem _imagesMenuItem;
-		private MenuItem _settingsMenuItem;
+		private ContextMenuStrip _contextMenu1;
+		private ToolStripMenuItem _exitMenuItem;
+		private ToolStripMenuItem _detailsMenuItem;
+		private ToolStripMenuItem _updateMenuItem;
+		private ToolStripMenuItem _imagesMenuItem;
+		private ToolStripMenuItem _settingsMenuItem;
 		private Timer _appTimer;
 		#endregion
 
@@ -140,14 +140,14 @@ namespace NasaPicOfDay
 			try
 			{
 				components = new Container();
-				_contextMenu1 = new ContextMenu();
-				_detailsMenuItem = new MenuItem();
-				_exitMenuItem = new MenuItem();
-				_updateMenuItem = new MenuItem();
-				_imagesMenuItem = new MenuItem();
-				_settingsMenuItem = new MenuItem();
+				_contextMenu1 = new ContextMenuStrip(components);
+				_detailsMenuItem = new ToolStripMenuItem();
+				_exitMenuItem = new ToolStripMenuItem();
+				_updateMenuItem = new ToolStripMenuItem();
+				_imagesMenuItem = new ToolStripMenuItem();
+				_settingsMenuItem = new ToolStripMenuItem();
 				// Create the NotifyIcon.
-				_notifyIcon1 = new NotifyIcon(components) { Icon = new Icon("world.ico"), ContextMenu = _contextMenu1 };
+				_notifyIcon1 = new NotifyIcon(components) { Icon = new Icon("world.ico"), ContextMenuStrip = _contextMenu1 };
 
 				// Handle the DoubleClick event to activate the form.
 				_notifyIcon1.DoubleClick += notifyIcon1_DoubleClick;
@@ -155,27 +155,22 @@ namespace NasaPicOfDay
 				UpdateContent();
 
 				// Initialize contextMenu1
-				_contextMenu1.MenuItems.AddRange(
+				_contextMenu1.Items.AddRange(
 				new[] { _imagesMenuItem, _updateMenuItem, _detailsMenuItem, _settingsMenuItem, _exitMenuItem });
 
 				//Initialize imagesMenuItme
-				_imagesMenuItem.Index = 0;
 				_imagesMenuItem.Text = Resources.ImagesLabel;
 				_imagesMenuItem.Click += imagesMenuItem_Click;
 				// Initialize updateMenuItem
-				_updateMenuItem.Index = 1;
 				_updateMenuItem.Text = Resources.UpdateLabel;
 				_updateMenuItem.Click += updateMenuItem_Click;
 				// Initialize detailsMenuItem
-				_detailsMenuItem.Index = 2;
 				_detailsMenuItem.Text = Resources.SeeDetailsLabel;
 				_detailsMenuItem.Click += detailsMenuItem_Click;
 				//initialize settingsMenuItem
-				_settingsMenuItem.Index = 3;
 				_settingsMenuItem.Text = Resources.SettingsLabel;
 				_settingsMenuItem.Click += settingsMenuItem_Click;
 				// Initialize exitMenuItem
-				_exitMenuItem.Index = 4;
 				_exitMenuItem.Text = Resources.ExitLabel;
 				_exitMenuItem.Click += exitMenuItem_Click;
 
@@ -190,10 +185,27 @@ namespace NasaPicOfDay
 
 		private void UpdateContent()
 		{
-			var changer = new BackgroundChanger();
-			GlobalVariables.NasaImage = changer.GetImage();
-			changer.SetDesktopBackground(GlobalVariables.NasaImage.DownloadedPath);
-			UpdateControlContent();
+			try
+			{
+				var changer = new BackgroundChanger();
+				GlobalVariables.NasaImage = changer.GetImage();
+				
+				if (GlobalVariables.NasaImage == null)
+				{
+					if (GlobalVariables.LoggingEnabled) 
+						ExceptionManager.WriteInformation("Failed to retrieve NASA image. Image object is null.");
+					return;
+				}
+				
+				changer.SetDesktopBackground(GlobalVariables.NasaImage.DownloadedPath);
+				UpdateControlContent();
+			}
+			catch (Exception ex)
+			{
+				ExceptionManager.WriteException(ex);
+				if (GlobalVariables.LoggingEnabled) 
+					ExceptionManager.WriteInformation("Error occurred while updating content.");
+			}
 		}
 
 		private void UpdateControlContent()

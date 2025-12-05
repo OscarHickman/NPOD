@@ -1,54 +1,54 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
    public class ImageNodeUber
    {
-      [JsonProperty("title")]
+      [JsonPropertyName("title")]
       public string Title { get; set; }
-      [JsonProperty("nid")]
+      [JsonPropertyName("nid")]
       public string NId { get; set; }
-      [JsonProperty("type")]
+      [JsonPropertyName("type")]
       public string Type { get; set; }
-      [JsonProperty("changed")]
+      [JsonPropertyName("changed")]
       public string Changed { get; set; }
-      [JsonProperty("uuid")]
+      [JsonPropertyName("uuid")]
       public string UuId { get; set; }
-      [JsonProperty("body")]
+      [JsonPropertyName("body")]
       public string Body { get; set; }
-      [JsonProperty("name")]
+      [JsonPropertyName("name")]
       public string Name { get; set; }
-      [JsonProperty("uri")]
+      [JsonPropertyName("uri")]
       public string Uri { get; set; }
-      [JsonProperty("collections")]
+      [JsonPropertyName("collections")]
       public object[] Collections { get; set; }
-      [JsonProperty("enableComments")]
+      [JsonPropertyName("enableComments")]
       public string EnableComments { get; set; }
-      [JsonProperty("linkOrAttachment")]
+      [JsonPropertyName("linkOrAttachment")]
       public string LinkOrAttachment { get; set; }
-      [JsonProperty("masterImage")]
+      [JsonPropertyName("masterImage")]
       public string MasterImage { get; set; }
-      [JsonProperty("missions")]
+      [JsonPropertyName("missions")]
       public object[] Missions { get; set; }
-      [JsonProperty("primaryTag")]
+      [JsonPropertyName("primaryTag")]
       public string PrimaryTag { get; set; }
-      [JsonProperty("promoDateTime")]
+      [JsonPropertyName("promoDateTime")]
       public string PromoDateTime { get; set; }
-      [JsonProperty("routes")]
+      [JsonPropertyName("routes")]
       public object[] Routes { get; set; }
-      [JsonProperty("secondaryTag")]
+      [JsonPropertyName("secondaryTag")]
       public string SecondaryTag { get; set; }
-      [JsonProperty("topics")]
+      [JsonPropertyName("topics")]
       public object[] Topics { get; set; }
-      [JsonProperty("ubernodeImage")]
+      [JsonPropertyName("ubernodeImage")]
       public string UberNodeImage { get; set; }
-      [JsonProperty("ubernodeType")]
+      [JsonPropertyName("ubernodeType")]
       public string UberNodeType { get; set; }
-      [JsonProperty("imageFeatureCaption")]
+      [JsonPropertyName("imageFeatureCaption")]
       public string ImageFeatureCaption { get; set; }
-      [JsonProperty("cardfeedTitle")]
+      [JsonPropertyName("cardfeedTitle")]
       public string CardFeedTitle { get; set; }
-      [JsonProperty("onS3")]
+      [JsonPropertyName("onS3")]
       public string OnS3 { get; set; }
    }
 }

@@ -1,58 +1,58 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
    public class ImageNodeImage
    {
-      [JsonProperty("fid")]
+      [JsonPropertyName("fid")]
       public string FId { get; set; }
-      [JsonProperty("uid")]
+      [JsonPropertyName("uid")]
       public string UId { get; set; }
-      [JsonProperty("filename")]
+      [JsonPropertyName("filename")]
       public string FileName { get; set; }
-      [JsonProperty("uri")]
+      [JsonPropertyName("uri")]
       public string Uri { get; set; }
-      [JsonProperty("filemime")]
+      [JsonPropertyName("filemime")]
       public string FileMime { get; set; }
-      [JsonProperty("filesize")]
+      [JsonPropertyName("filesize")]
       public string FileSize { get; set; }
-      [JsonProperty("status")]
+      [JsonPropertyName("status")]
       public string Status { get; set; }
-      [JsonProperty("timestamp")]
+      [JsonPropertyName("timestamp")]
       public string TimeStamp { get; set; }
-      [JsonProperty("uuid")]
+      [JsonPropertyName("uuid")]
       public string UuId { get; set; }
-      [JsonProperty("alt")]
+      [JsonPropertyName("alt")]
       public string Alt { get; set; }
-      [JsonProperty("title")]
+      [JsonPropertyName("title")]
       public string Title { get; set; }
-      [JsonProperty("width")]
+      [JsonPropertyName("width")]
       public string Width { get; set; }
-      [JsonProperty("height")]
+      [JsonPropertyName("height")]
       public string Height { get; set; }
-      [JsonProperty("crop1x1")]
+      [JsonPropertyName("crop1x1")]
       public string Crop1X1 { get; set; }
-      [JsonProperty("crop2x1")]
+      [JsonPropertyName("crop2x1")]
       public string Crop2X1 { get; set; }
-      [JsonProperty("crop2x2")]
+      [JsonPropertyName("crop2x2")]
       public string Crop2X2 { get; set; }
-      [JsonProperty("crop3x1")]
+      [JsonPropertyName("crop3x1")]
       public string Crop3X1 { get; set; }
-      [JsonProperty("crop1x2")]
+      [JsonPropertyName("crop1x2")]
       public string Crop1X2 { get; set; }
-      [JsonProperty("crop4x3ratio")]
+      [JsonPropertyName("crop4x3ratio")]
       public string Crop4X3Ratio { get; set; }
-      [JsonProperty("cropHumongo")]
+      [JsonPropertyName("cropHumongo")]
       public string CropHumongo { get; set; }
-      [JsonProperty("cropBanner")]
+      [JsonPropertyName("cropBanner")]
       public string CropBanner { get; set; }
-      [JsonProperty("cropUnHoriz")]
+      [JsonPropertyName("cropUnHoriz")]
       public string CropUnHoriz { get; set; }
-      [JsonProperty("cropUnVert")]
+      [JsonPropertyName("cropUnVert")]
       public string CropUnVert { get; set; }
-      [JsonProperty("fullWidthFeature")]
+      [JsonPropertyName("fullWidthFeature")]
       public string FullWidthFeature { get; set; }
-      [JsonProperty("lrThumbnail")]
+      [JsonPropertyName("lrThumbnail")]
       public string LrThumbnail { get; set; }
    }
 }

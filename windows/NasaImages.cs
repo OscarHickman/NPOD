@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
 	public class NasaImages
 	{
-		[JsonProperty("ubernodes")]
+		[JsonPropertyName("ubernodes")]
 		public UberNode[] UberNodes { get; set; }
 
-		[JsonProperty("meta")]
+		[JsonPropertyName("meta")]
 		public UberMeta Meta { get; set; }
 	}
 }

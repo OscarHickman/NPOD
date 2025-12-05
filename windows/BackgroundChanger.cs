@@ -16,7 +16,7 @@ namespace NasaPicOfDay
 
       private const UInt32 SpiSetdeskwallpaper = 20;
       private const UInt32 SpifUpdateinifile = 0x1;
-      private const string NasaLatestImagesUrl = "https://www.nasa.gov/api/1/query/ubernodes.json?unType%5B%5D=image&routes%5B%5D=1446&page={0}&pageSize=24";
+      private const string NasaLatestImagesUrl = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&hd=true";//"https://www.nasa.gov/api/1/query/ubernodes.json?unType%5B%5D=image&routes%5B%5D=1446&page={0}&pageSize=24";
       private const string NasaImageBaseUrl = "http://www.nasa.gov";
       private const string NasaApiUrl = "http://www.nasa.gov/api/1/record/node/";
       private string _currentScreenResolution;
@@ -66,45 +66,19 @@ namespace NasaPicOfDay
             GetCurrentScreenResolution();
             if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation(string.Format("System screen resolution is: {0}", _currentScreenResolution));
 
-            if (selectedOffset == null)
-               selectedOffset = DefaultimageOffset;
+            //Get the APOD JSON data
+            if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Preparing to download APOD image information");
+            var apodImage = JsonHelper.DownloadApodData(NasaLatestImagesUrl);
+            if (apodImage == null)
+               throw new Exception("Unable to retrieve image data from APOD API");
 
-            //Get the JSON string data
-            if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Preparing to download image information");
-            var nasaImages = JsonHelper.DownloadSerializedJsonData(string.Format(NasaLatestImagesUrl, selectedPage));
-            if (nasaImages == null || nasaImages.UberNodes.Length == 0)
-               throw new Exception("Unable to retrieve image data from JSON request");
+            // Skip if media type is not an image (could be video)
+            if (apodImage.MediaType != "image")
+               throw new Exception("APOD media type is not an image.");
 
-            //Get the image node
-            var imageId = nasaImages.UberNodes[(int) selectedOffset].UberNodeId;
-
-            var currentImageFullUrl = string.Format("{0}{1}.json", NasaApiUrl, imageId);
-
-            var currentImage = JsonHelper.DownloadImageData(currentImageFullUrl);
-            if (currentImage == null)
-               throw new Exception(string.Format("Unable to retrieve selected image: {0}", currentImageFullUrl));
-
-            if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation("Selecting image based on current screen resolution");
-            switch (_currentScreenResolution)
-            {
-               case "100x75":
-               case "226x170":
-                  currentImageFullUrl = string.Format("{0}{1}", NasaImageBaseUrl, currentImage.ImageData[0].LrThumbnail);
-                  break;
-               case "346x260":
-               case "360x225":
-               case "466x248":
-               case "430x323":
-                  currentImageFullUrl = string.Format("{0}{1}", NasaImageBaseUrl, currentImage.ImageData[0].Crop1X1);
-                  break;
-               case "800x600":
-                  currentImageFullUrl = string.Format("{0}{1}", NasaImageBaseUrl, currentImage.ImageData[0].Crop2X1);
-                  break;
-               default:
-                  currentImageFullUrl = string.Format("{0}{1}", NasaImageBaseUrl, currentImage.ImageData[0].FullWidthFeature);
-                  break;
-            }
-
+            // Use HD URL if available, otherwise use regular URL
+            var imageUrl = !string.IsNullOrEmpty(apodImage.HdUrl) ? apodImage.HdUrl : apodImage.Url;
+            
             var localImageFolderPath = string.Format("{0}\\NASA\\PicOfTheDay", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
 
             if (!Directory.Exists(localImageFolderPath))
@@ -112,27 +86,25 @@ namespace NasaPicOfDay
                Directory.CreateDirectory(localImageFolderPath);
             }
 
-            var imageName = currentImage.ImageData[0].FileName;
+            // Extract filename from URL or create one based on date
+            var imageName = apodImage.Date.Replace("-", "") + Path.GetExtension(imageUrl);
 
             //Setting the full local image path to save the file
             var fullImagePath = string.Format("{0}\\{1}", localImageFolderPath, imageName);
 
             //Download the current image
-            if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation(string.Format("Preparing to download image: {0}", currentImageFullUrl));
-            if (!DownloadHelper.DownloadImage(fullImagePath, currentImageFullUrl))
+            if (GlobalVariables.LoggingEnabled) ExceptionManager.WriteInformation(string.Format("Preparing to download image: {0}", imageUrl));
+            if (!DownloadHelper.DownloadImage(fullImagePath, imageUrl))
                throw new Exception("Error downloading current image.");
 
             //Create BackgroundImage object 
             var backgroundImage = new BackgroundImage
             {
-               ImageUrl = currentImageFullUrl,
-               ImageDate = Convert.ToDateTime(currentImage.UberData.PromoDateTime),
-               ImageDescription = StripHtml(currentImage.UberData.Body),
+               ImageUrl = imageUrl,
+               ImageDate = DateTime.Parse(apodImage.Date),
+               ImageDescription = apodImage.Explanation,
                DownloadedPath = fullImagePath,
-               ImageTitle =
-                  !string.IsNullOrEmpty(currentImage.ImageData[0].Title)
-                     ? currentImage.ImageData[0].Title
-                     : currentImage.UberData.Title
+               ImageTitle = apodImage.Title
             };
 
             return backgroundImage;

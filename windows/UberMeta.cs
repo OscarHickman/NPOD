@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
    public class UberMeta
    {
-      [JsonProperty("total_rows")]
+      [JsonPropertyName("total_rows")]
       public string TotalRows { get; set; }
    }
 }

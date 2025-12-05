@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
     public class UberNode
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string UberNodeType { get; set; }
 
-        [JsonProperty("nid")]
+        [JsonPropertyName("nid")]
         public string UberNodeId { get; set; }
 
-        [JsonProperty("promoDateTime")]
+        [JsonPropertyName("promoDateTime")]
         public string UberPromoData { get; set; }
     }
 }

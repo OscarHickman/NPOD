@@ -1,4 +1,63 @@
-*windows/[Bb]in
-*windows/[Bb]in/[Dd]ebug*/
-*windows/obj/
-*windows/[Bb]in/[Rr]elease*/
+# Build artifacts
+**/[Bb]in/
+**/[Oo]bj/
+**/[Dd]ebug/
+**/[Rr]elease/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# NuGet Packages
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Mac files
+.DS_Store
+*.xcuserstate
+xcuserdata/
+
+# Installer logs
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Application specific
+*.log
+*.exe
+*.dll
+*.pdb
+*.application
+*.manifest
+!ClickOnce*/
+
+# Updater binaries
+**/Updater/bin/
+**/Updater/obj/
+
+# Setup projects
+**/Setup/**/Debug/
+**/Setup/**/Release/

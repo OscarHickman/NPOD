@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace NasaPicOfDay
 {
    public class ImageNode
    {
-      [JsonProperty("images")]
+      [JsonPropertyName("images")]
       public List<ImageNodeImage> ImageData { get; set; }
 
-      [JsonProperty("ubernode")]
+      [JsonPropertyName("ubernode")]
       public ImageNodeUber UberData { get; set; }
    }
 }
